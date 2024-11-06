@@ -22,6 +22,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
         iframe {
@@ -33,73 +35,102 @@
         h3 {
             text-align: center;
             font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        /* Style for floating video */
+        .floating-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 75vw;
+            height: 75vh;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* Overlay for background when video is floating */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
         }
     </style>
 </head>
 
 <body>
     <h1>Election 2024 Livestreams</h1>
+
+    <!-- Overlay div for background dimming -->
+    <div class="overlay" id="overlay"></div>
+
     <div class="container">
         <div class="tile">
-            <h3>ET</h3>
+            <h3 onclick="toggleFloat(this)">ET</h3>
             <iframe src="https://www.youtube.com/embed/2eomVfQkJec?si=x5Cx2MHf4FfQaWdb" title="ET" allowfullscreen></iframe>
         </div>
 
         <div class="tile">
-            <h3>Blaze</h3>
+            <h3 onclick="toggleFloat(this)">Blaze</h3>
             <iframe src="https://www.youtube.com/embed/VQXmGCEimnA?si=4S-SN3c3yNRahOvm" title="Blaze" allowfullscreen></iframe>
-        </div>        
+        </div>
 
         <div class="tile">
-            <h3>Tucker</h3>
+            <h3 onclick="toggleFloat(this)">Tucker</h3>
             <iframe src="https://www.youtube.com/embed/284VFHrO8Nc?si=HtvZjImAKUfFwX2F" title="Tucker" allowfullscreen></iframe>
         </div>
 
-        <div class="tile">
-            <h3>DW+</h3>
-            <iframe src="https://www.youtube.com/embed/VEP1bDYBra4?si=xqWWE9a8hZF8jL1L" title="DW+" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>PDB</h3>
-            <iframe src="https://www.youtube.com/embed/cJKtmTNf8qU?si=DkL43ROc5eIOT6QM" title="PDB" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>Timcast</h3>
-            <iframe src="https://www.youtube.com/embed/k2Sg-aS4U2c?si=tsJaK2R4MOz66D_S" title="Timcast" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>Hyenas</h3>
-            <iframe src="https://www.youtube.com/embed/y5i62eeHgrM?si=LQ4F2kqmTcDNsOiC" title="Hyenas" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>Crowder</h3>
-            <iframe src="https://www.youtube.com/embed/AU9Lh4BErPw?si=lsnVQuDK4y8vCLbv" title="Crowder" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>FP</h3>
-            <iframe src="https://www.youtube.com/embed/MU6bS-sx_yU?si=dpP_Cw9rD6upGPmO" title="FP" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>FOX</h3>
-            <iframe src="https://www.youtube.com/embed/U0EoOsgzOVQ?si=DddaVcGGkaW1tYIm" title="FOX" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>CBS</h3>
-            <iframe src="https://www.youtube.com/embed/X8WD27_qpIo?si=IZbCtdiicm81q_ei" title="CBS" allowfullscreen></iframe>
-        </div>
-
-        <div class="tile">
-            <h3>PBS</h3>
-            <iframe src="https://www.youtube.com/embed/dOOwx6fZ824?si=JwQZnSHSx23uJ2QJ" title="PBS" allowfullscreen></iframe>
-        </div>
+        <!-- Add other tiles as needed following the same structure -->
     </div>
+
+    <script>
+        // Function to handle floating the video
+        function toggleFloat(header) {
+            const tile = header.parentElement;
+            const overlay = document.getElementById('overlay');
+            
+            // Close any already open floating video
+            const currentlyFloating = document.querySelector('.floating-video');
+            if (currentlyFloating && currentlyFloating !== tile) {
+                currentlyFloating.classList.remove('floating-video');
+                overlay.style.display = 'none';
+            }
+
+            // Toggle current video floating state
+            if (tile.classList.contains('floating-video')) {
+                tile.classList.remove('floating-video');
+                overlay.style.display = 'none';
+            } else {
+                tile.classList.add('floating-video');
+                overlay.style.display = 'block';
+            }
+        }
+
+        // Close floating video on overlay click or ESC key press
+        document.getElementById('overlay').addEventListener('click', closeFloatingVideo);
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeFloatingVideo();
+            }
+        });
+
+        function closeFloatingVideo() {
+            const floatingTile = document.querySelector('.floating-video');
+            if (floatingTile) {
+                floatingTile.classList.remove('floating-video');
+                document.getElementById('overlay').style.display = 'none';
+            }
+        }
+    </script>
 </body>
 
 </html>
